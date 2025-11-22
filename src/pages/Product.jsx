@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/frontend_assets/assets'
+import RelatedProducts from '../components/RelatedProducts';
 
 const Product = () => {
 
@@ -96,6 +97,26 @@ const Product = () => {
 
 
       </div>
+
+      {/*-----------------Description and Review Section----------------------------- */}
+      <div className='mt-20'>
+                  <div className='flex'>
+                    <b className='border px-5 py-3 text-sm'> Description</b>
+                    <p className='border px-5 py-3 text-sm'>Reviews (122)</p>
+                  </div>  
+                    <div className='flex flex-col gap-4 border px-6 py-6 test-sm text-gray-500'>
+                      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis alias id adipisci aliquid rerum tempora, ad, similique iste voluptates necessitatibus explicabo soluta! Eius fugit eum quisquam repudiandae laboriosam, molestias tempore?
+                      Amet dolore ratione quae. Facere asperiores labore modi nobis enim nulla vel quisquam laudantium corrupti quasi laborum quas consequatur dolor quo, rem fuga dolorem, deserunt voluptatem cumque mollitia! Autem, quidem?
+                      Expedita illum consectetur est sed possimus tempora ratione optio? Earum.</p>
+                      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, assumenda. Illum libero inventore earum ipsam quaerat adipisci reiciendis natus fugit accusamus. Omnis tenetur voluptates facere ab, enim debitis? Culpa, cumque.
+                      </p>
+
+                    </div>
+      </div>
+
+      {/*---------------------Display related products-------------------- */}
+
+      <RelatedProducts category={productData.category} subCategory={productData.subCategory}/>
 
 
     </div>
