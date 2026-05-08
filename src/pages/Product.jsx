@@ -51,7 +51,7 @@ const Product = () => {
         </div>
 
         <div className='w-full sm:w-[80%]'>
-          <img className='w-full h-auto' src={image} alt="" />
+          <img className='w-full h-auto' src={image} alt="image du produit" />
 
         </div>
 
