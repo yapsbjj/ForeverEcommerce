@@ -68,7 +68,7 @@ const Navbar = () => {
                                 <p onClick={logOut} className='cursor-pointer hover:text-black'>Se déconnecter</p>
                             </div>
 
-                        </div> }
+                        </div> } 
                 </div>
 
                 <Link to='/cart' className='relative'>
