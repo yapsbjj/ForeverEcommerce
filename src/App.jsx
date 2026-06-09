@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ScrollToTop from './components/ScrollToTop.jsx'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Collections from './pages/Collections'
@@ -72,6 +73,7 @@ const App = () => {
 
       <Navbar />
       <SearchBar />
+      <ScrollToTop />
 
       <Routes>
         <Route path='/' element={<Home />} />
