@@ -1,14 +1,25 @@
-import React, { useState, useContext } from 'react'
-import { assets } from '../assets/frontend_assets/assets'
+import React, { useState, useContext, useEffect } from 'react'
+import {assets} from '../assets/frontend_assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
 
     const [visible, setVisible] = useState(false);
-    const [openMenu, setOpenMenu] = useState(false); // Menu déroulant
+    const [openMenu, setOpenMenu] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     const { setShowSearch, getCartCount, navigate, token, setToken, setCartItems } = useContext(ShopContext);
+
+    // Détecter si c'est un mobile
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 640); // sm breakpoint de Tailwind
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Log out
     const logOut = () => {
@@ -16,14 +27,33 @@ const Navbar = () => {
         localStorage.removeItem('token')
         setToken('')
         setCartItems({})
-        setOpenMenu(false) // Ferme le menu après déconnexion
+        setOpenMenu(false)
     }
 
-    // Fermer le menu déroulant quand on clique ailleurs
-    const toggleMenu = (e) => {
-        e.stopPropagation();
-        setOpenMenu(!openMenu);
+    // Gestion du clic sur mobile
+    const handleProfileClick = () => {
+        if (!token) {
+            navigate('/login')
+            return
+        }
+        if (isMobile) {
+            setOpenMenu(!openMenu)
+        }
     }
+
+    // Fermer le menu si on clique ailleurs (mobile seulement)
+    useEffect(() => {
+        if (!isMobile || !openMenu) return;
+        
+        const handleClickOutside = (e) => {
+            if (!e.target.closest('.profile-menu-container')) {
+                setOpenMenu(false);
+            }
+        };
+        
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, [isMobile, openMenu]);
 
     return (
         <div className='flex items-center justify-between py-5 font-medium'>
@@ -57,21 +87,26 @@ const Navbar = () => {
                     className='w-5 cursor-pointer'
                     alt="icone de recherche" />
 
-                <div className='relative'>
-                    <img
-                        onClick={() => token ? toggleMenu : navigate('/login')}
-                        className='w-5 cursor-pointer'
-                        src={assets.profile_icon}
-                        alt="image de profil"
+                {/* Container avec une classe pour la détection des clics externes */}
+                <div className='group relative profile-menu-container'>
+                    <img 
+                        onClick={handleProfileClick}
+                        className='w-5 cursor-pointer' 
+                        src={assets.profile_icon} 
+                        alt="image de profil" 
                     />
-                    {/* dropdown menu au clic */}
-                    {token && openMenu && (
-                        <div className='absolute dropdown-menu right-0 pt-4 z-50'>
+                    
+                    {/* Dropdown menu : hover sur desktop, clic sur mobile */}
+                    {token && (
+                        <div className={`
+                            absolute dropdown-menu right-0 pt-4 z-50
+                            ${isMobile 
+                                ? `${openMenu ? 'block' : 'hidden'}` 
+                                : 'hidden group-hover:block'
+                            }
+                        `}>
                             <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-lg'>
-                                <p onClick={() => {
-                                    setOpenMenu(false);
-                                    // Navigation vers profil 
-                                }} className='cursor-pointer hover:text-black'>Mon profil</p>
+                                <p className='cursor-pointer hover:text-black'>Mon profil</p>
                                 <p onClick={() => {
                                     navigate('/orders');
                                     setOpenMenu(false);
@@ -105,14 +140,6 @@ const Navbar = () => {
                     <NavLink onClick={() => setVisible(false)} className='flex flex-col items-center pt-5' to='/contact'>Nous contacter</NavLink>
                 </div>
             </div>
-
-            {/* Optionnel : fermer le menu quand on clique ailleurs sur la page */}
-            {openMenu && (
-                <div
-                    className='fixed inset-0 z-40'
-                    onClick={() => setOpenMenu(false)}
-                />
-            )}
         </div>
     )
 }
