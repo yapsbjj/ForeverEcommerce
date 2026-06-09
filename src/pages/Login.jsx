@@ -14,6 +14,7 @@ const Login = () => {
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [acceptCGV, setAcceptCGV] = useState(false)
 
   const onSubmitHandler = async (event) =>{
       event.preventDefault();
@@ -62,6 +63,7 @@ const Login = () => {
       {currentState === 'Login' ? '' : <input onChange={(e)=>setName(e.target.value)} value={name} type="text" className='w-full px-3 py-2 border border-gray-800' placeholder='Nom' required />}
       <input onChange={(e)=>setEmail(e.target.value)} value={email} type="email" className='w-full px-3 py-2 border border-gray-800' placeholder='Email' required />
       <input onChange={(e)=>setPassword(e.target.value)} value={password} type="password" className='w-full px-3 py-2 border border-gray-800' placeholder='Mot de passe' required />
+      
       <div className='w-full flex justify-between text-sm mt-[-8px]'>
           <p className='cursor-pointer'>Mot de passe oublié ?</p>
           {
@@ -70,6 +72,20 @@ const Login = () => {
             : <p onClick={()=>setCurrentState('Login')} className='cursor-pointer'>Se Connecter</p>
           }
       </div>
+      {currentState === 'Sign up' && (
+        <div className='w-full flex items-center gap-2 text-sm'>
+          <input
+            onChange={(e) => setAcceptCGV(e.target.checked)}
+            checked={acceptCGV}
+            type="checkbox"
+            id="cgv"
+            required
+          />
+          <label htmlFor="cgv" className='cursor-pointer'>
+            J'ai lu et j'accepte les conditions de ventes
+          </label>
+        </div>
+      )}
       <button className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login' ? 'Se connecter' : "S'inscrire"}</button>
     </form>
   )
